@@ -12,21 +12,50 @@
 		$dbh = new PDO($dsn,$user,$password);
 		$dbh->query('SET NAMES utf8');
 
-		//SQL文作成(INSERT文)
+		//SQL文作成(INSERT文) 投稿する為のコード
 		$sql = 'INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) VALUES (null,"'.$nickname.'","'.$comment.'",now())';
 		//INSERT文実行
 		$stmt = $dbh->prepare($sql);
 		$stmt->execute();
-		//データベースから切断
-		$dbh = null;
 	}
+
+		// 動くのは動くけど何故か2回接続しないとエラーが...(*´-`)
+		$dsn = 'mysql:dbname=oneline_bbs;host=localhost';
+		$user = 'root';
+		$password = '';
+		$dbh = new PDO($dsn,$user,$password);
+		$dbh->query('SET NAMES utf8');
+
+		// ここから掲示板に表示させる為のコード
+		$sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
+		//SQL文実行
+		$stmt = $dbh->prepare($sql);
+		$stmt->execute();
+		// $posts = array();
+		// var_dump($stmt);
+		while(1){
+			//実行結果として得られたデータを表示
+			$rec = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($rec == false){
+		    	break;
+	    	}
+	    $posts[]=$rec;
+	    // echo $rec['id'];
+	    // echo $rec['nickname'];
+	    // echo $rec['comment'];
+	    // echo $rec['created'];
+
+		}
+		// データベースから切断
+		$dbh = null;
+
 ?>
 
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>Oneline_bbs_セブ掲示版</title>
+	<meta charset="UTF-8">
+	<title>Oneline_bbs_セブ掲示版</title>
 
 </head>
 	<body>
@@ -36,13 +65,17 @@
 			<button type="submit" >つぶやく</button>
 	    </form>
 
-	    <h2><a href="#">nickname Eriko</a> <span>2015-12-02 10:10:10</span></h2>
-	    <p>つぶやきコメント2</p>
+	    <?php foreach ($posts as $post){ ?>
 
-	    <h2><a href="#">nickname Eriko</a> <span>2015-12-02 10:10:10</span></h2>
-	    <p>つぶやきコメント2</p>
+		    <h2><a href="#"><?php echo $post['nickname']; ?></a>
+		    <span><?php echo $post['created']; ?></span></h2>
+		    <p><?php echo $post['comment']; ?></p>
+
+	    <?php } ?>
+
+		    <!-- <h2><a href="#">nickname Eriko</a> -->
+		    <!-- <span>2015-12-02 10:10:10</span></h2> -->
+		    <!-- <p>つぶやきコメント2</p> -->
+
 	</body>
 </html>
-
-<!-- SELECT * FROM `posts` WHERE id=1 -->
-
