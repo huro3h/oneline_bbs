@@ -1,16 +1,17 @@
 <?php
+	//データベースに接続
+	$dsn = 'mysql:dbname=oneline_bbs;host=localhost';
+	$user = 'root';
+	$password = '';
+	$dbh = new PDO($dsn,$user,$password);
+	$dbh->query('SET NAMES utf8');
+
 	//POST送信が行われたら、下記の処理を実行
 	//テストコメント
 	if(isset($_POST) && !empty($_POST)){
+
 		$nickname = $_POST['nickname'];
 		$comment = $_POST['comment'];
-
-		//データベースに接続
-		$dsn = 'mysql:dbname=oneline_bbs;host=localhost';
-		$user = 'root';
-		$password = '';
-		$dbh = new PDO($dsn,$user,$password);
-		$dbh->query('SET NAMES utf8');
 
 		//SQL文作成(INSERT文) 投稿する為のコード
 		$sql = 'INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) VALUES (null,"'.$nickname.'","'.$comment.'",now())';
@@ -18,13 +19,6 @@
 		$stmt = $dbh->prepare($sql);
 		$stmt->execute();
 	}
-
-		// 動くのは動くけど何故か2回接続しないとエラーが...(*´-`)
-		$dsn = 'mysql:dbname=oneline_bbs;host=localhost';
-		$user = 'root';
-		$password = '';
-		$dbh = new PDO($dsn,$user,$password);
-		$dbh->query('SET NAMES utf8');
 
 		// ここから掲示板に表示させる為のコード
 		$sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
