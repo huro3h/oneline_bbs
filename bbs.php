@@ -3,13 +3,36 @@
 require("dbconnect.php");
 
 	if(isset($_POST) && !empty($_POST)){
-		// $nickname = $_POST['nickname'];
-		// $comment = $_POST['comment'];
-		$sql = sprintf('INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) VALUES (null,"%s","%s",now())',$_POST['nickname'],$_POST['comment']);
-		// INSERT文実行
-		$stmt = $dbh->prepare($sql);
-		$stmt->execute();
+
+		if (isset($_POST['update'])){
+			//Update文を実行
+			$sql = "UPDATE `posts` SET `nickname`='".$_POST['nickname']."',`comment`='".$_POST['comment'];
+			$sql .= "',`created`=now() WHERE `id`=".$_POST['id'];
+		}else{
+			$sql = sprintf('INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) VALUES (null,"%s","%s",now())',$_POST['nickname'],$_POST['comment']);
+		}
+			// INSERT文実行
+			$stmt = $dbh->prepare($sql);
+			$stmt->execute();
 	}
+
+		// GET送信されたら編集処理するコード
+		$editname='';
+		$editcomment = '';
+		$id = '';
+		if (isset($_GET['action']) && ($_GET['action'] == 'edit')){
+			//編集したいデータを取得するSQL文を作成（SELECT文）
+			$selectsql = 'SELECT * FROM `posts` WHERE `id`='.$_GET['id'];
+			//SQL文を実行
+			$stmt = $dbh->prepare($selectsql);
+			$stmt->execute();
+
+			$rec = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			$editname = $rec['nickname'];
+			$editcomment = $rec['comment'];
+			$id = $rec['id'];
+		}
 
 		// ここから掲示板に表示させる為のコード
 		$sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
@@ -32,24 +55,6 @@ require("dbconnect.php");
 		// echo $rec['nickname'];
 		// echo $rec['comment'];
 		// echo $rec['created'];
-		}
-
-		// 編集するコード
-		$editname='';
-		$editcomment = '';
-		$id = '';
-		if (isset($_GET['action']) && ($_GET['action'] == 'edit')){
-			//編集したいデータを取得するSQL文を作成（SELECT文）
-			$selectsql = 'SELECT * FROM `posts` WHERE `id`='.$_GET['id'];
-			//SQL文を実行
-			$stmt = $dbh->prepare($selectsql);
-			$stmt->execute();
-
-			$rec = $stmt->fetch(PDO::FETCH_ASSOC);
-
-			$editname = $rec['nickname'];
-			$editcomment = $rec['comment'];
-			$id = $rec['id'];
 		}
 
 	$dbh = null;
@@ -80,7 +85,7 @@ require("dbconnect.php");
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#page-top"><span class="strong-title"><i class="fa fa-music" aria-hidden="true"></i> Oneline bbs</span></a>
+              <a class="navbar-brand" href="bbs.php"><span class="strong-title"><i class="fa fa-music" aria-hidden="true"></i> Oneline bbs</span></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -111,7 +116,7 @@ require("dbconnect.php");
           <div class="form-group">
             <div class="input-group">
               <input type="text" name="nickname" class="form-control"
-                       id="validate-text" placeholder="nickname" required>
+                       id="validate-text" placeholder="nickname" value="<?php echo $editname; ?>" required>
 
               <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
             </div>
@@ -120,7 +125,7 @@ require("dbconnect.php");
 
           <div class="form-group">
             <div class="input-group" data-validate="length" data-length="4">
-              <textarea type="text" class="form-control" name="comment" id="validate-length" placeholder="comment" required></textarea>
+              <textarea type="text" class="form-control" name="comment" id="validate-length" placeholder="comment" required><?php echo $editcomment; ?></textarea>
               <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
             </div>
           </div>
@@ -142,24 +147,30 @@ require("dbconnect.php");
         <?php foreach ($posts as $post_each){ ?>
         <article class="timeline-entry">
             <div class="timeline-entry-inner">
+            <a href="bbs.php?action=edit&id=<?php echo $post_each['id'];?>">
                 <div class="timeline-icon bg-success">
                     <i class="entypo-feather"></i>
-                    <i class="fa fa-gavel" aria-hidden="true"></i></i>
+                    <i class="fa fa-gavel"></i>
                 </div>
-
+            </a>
                 <div class="timeline-label">
-                    <h2><a href="#"><?php echo $post_each['nickname']; ?></a> <span><?php echo $post_each['created']; ?></span></h2>
+                    <h2>
+	                    <a href="#"><?php echo $post_each['nickname']; ?></a>
+	                    <span><?php echo $post_each['created']; ?></span>
+                    </h2>
                     <p><?php echo $post_each['comment']; ?></p>
                 </div>
             </div>
         </article>
         <?php } ?>
+        </div>
+      </div>
 
         <article class="timeline-entry begin">
 
             <div class="timeline-entry-inner">
 
-                <div class="timeline-icon" style="-webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);">
+                <!-- <div class="timeline-icon" style="-webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);"> -->
                     <i class="entypo-flight"></i> +
                 </div>
 
