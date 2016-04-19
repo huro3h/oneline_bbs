@@ -1,21 +1,28 @@
 <?php
 	//データベースに接続
-	$dsn = 'mysql:dbname=oneline_bbs;host=localhost';
-	$user = 'root';
-	$password = '';
-	$dbh = new PDO($dsn,$user,$password);
-	$dbh->query('SET NAMES utf8');
+	// $dsn = 'mysql:dbname=oneline_bbs;host=localhost';
+	// $user = 'root';
+	// $password = '';
+	// $dbh = new PDO($dsn,$user,$password);
+	// $dbh->query('SET NAMES utf8');
+
+	require("dbconnect.php");
 
 	//POST送信が行われたら、下記の処理を実行
 	//テストコメント
 	if(isset($_POST) && !empty($_POST)){
+		// $nickname = $_POST['nickname'];
+		// $comment = $_POST['comment'];
 
-		$nickname = $_POST['nickname'];
-		$comment = $_POST['comment'];
+		// SQL文作成(INSERT文) 投稿する為のコード
+		// $sql = 'INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) VALUES (null,"'.$_POST['nickname'].'","'.$_POST['comment'].'",now())';
+		// $sql = 'INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) ';
+		// $sql .= 'VALUES (null,\''.$_POST['nickname'].'\',\''.$_POST['comment'].'\',now())';
+		$sql = sprintf('INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) VALUES (null,"%s","%s",now())',$_POST['nickname'],$_POST['comment']);
+		// sprintf関数を使うことによって、カンマ区切りの後の引数だけ変えることができ、
+		// 誤って記号を消してしまうのを防ぐことができる。
 
-		//SQL文作成(INSERT文) 投稿する為のコード
-		$sql = 'INSERT INTO `posts`(`id`, `nickname`, `comment`, `created`) VALUES (null,"'.$nickname.'","'.$comment.'",now())';
-		//INSERT文実行
+		// INSERT文実行
 		$stmt = $dbh->prepare($sql);
 		$stmt->execute();
 	}
@@ -32,44 +39,43 @@
 			$rec = $stmt->fetch(PDO::FETCH_ASSOC);
 			if($rec == false){
 		    	break;
-	    	}
-	    $posts[]=$rec;
-	    // echo $rec['id'];
-	    // echo $rec['nickname'];
-	    // echo $rec['comment'];
-	    // echo $rec['created'];
+			}
+
+		$posts[]=$rec;
+		// echo $rec['id'];
+		// echo $rec['nickname'];
+		// echo $rec['comment'];
+		// echo $rec['created'];
 
 		}
 		// データベースから切断
 		$dbh = null;
-
 ?>
 
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 	<meta charset="UTF-8">
-	<title>Oneline_bbs_セブ掲示版</title>
-
+	<title>oneline_bbs_no_cssセブ掲示版</title>
 </head>
 	<body>
 		<form action="bbs_no_css.php" method="post">
 			<input type="text" name="nickname" placeholder="nickname" required>
 			<textarea type="text" name="comment" placeholder="comment" required></textarea>
 			<button type="submit" >つぶやく</button>
-	    </form>
+		</form>
 
-	    <?php foreach ($posts as $post){ ?>
+		<?php foreach ($posts as $post){ ?>
 
-		    <h2><a href="#"><?php echo $post['nickname']; ?></a>
-		    <span><?php echo $post['created']; ?></span></h2>
-		    <p><?php echo $post['comment']; ?></p>
+			<h2><a href="#"><?php echo $post['nickname']; ?></a>
+			<span><?php echo $post['created']; ?></span></h2>
+			<p><?php echo $post['comment']; ?></p>
 
-	    <?php } ?>
+		<?php } ?>
 
-		    <!-- <h2><a href="#">nickname Eriko</a> -->
-		    <!-- <span>2015-12-02 10:10:10</span></h2> -->
-		    <!-- <p>つぶやきコメント2</p> -->
+			<!-- <h2><a href="#">nickname Eriko</a> -->
+			<!-- <span>2015-12-02 10:10:10</span></h2> -->
+			<!-- <p>つぶやきコメント2</p> -->
 
 	</body>
 </html>
