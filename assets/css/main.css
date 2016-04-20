@@ -1,6 +1,28 @@
 body {
   margin-top: 20px;
+  background-size: cover;
+  background-image: url(../../back.jpg);
+  background-position: right 40pt;
 }
+
+.bg{
+	background-size: cover;
+	position: relative;
+	height:100%;
+}
+
+.bg::before{
+	/* 透過した黒を重ねる */
+	background-color: rgba(0,0,0,0.5);
+	/* どの範囲に重ねるかを指定 */
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	content: ' ';
+}
+
 
 .content-margin-top {
   margin-top: 80px;
@@ -9,4 +31,15 @@ body {
 .strong-title {
   font-size: 30px;
   font-weight: 800;
+}
+
+.clear{
+	/*background: #333;*/
+    /*padding: 10px;*/
+    /*border: 5px solid #000;*/
+    color: #fff;
+    opacity: 0.75;
+}
+#nonclear{
+	opacity: 1;
 }

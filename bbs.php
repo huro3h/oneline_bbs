@@ -1,9 +1,6 @@
 <?php
-
 require("dbconnect.php");
-
 	if(isset($_POST) && !empty($_POST)){
-
 		if (isset($_POST['update'])){
 			//Update文を実行
 			$sql = "UPDATE `posts` SET `nickname`='".$_POST['nickname']."',`comment`='".$_POST['comment'];
@@ -15,7 +12,6 @@ require("dbconnect.php");
 			$stmt = $dbh->prepare($sql);
 			$stmt->execute();
 	}
-
 		// GET送信されたら編集処理するコード
 		$editname='';
 		$editcomment = '';
@@ -26,22 +22,17 @@ require("dbconnect.php");
 			//SQL文を実行
 			$stmt = $dbh->prepare($selectsql);
 			$stmt->execute();
-
 			$rec = $stmt->fetch(PDO::FETCH_ASSOC);
-
 			$editname = $rec['nickname'];
 			$editcomment = $rec['comment'];
 			$id = $rec['id'];
 		}
-
 		if (isset($_GET['action']) && ($_GET['action'] == 'delete')){
 			$deletesql = "DELETE FROM `posts` WHERE `id`=".$_GET['id'];
-
 			//SQL文を実行
 			$stmt = $dbh->prepare($deletesql);
 			$stmt->execute();
 		}
-
 		// ここから掲示板に表示させる為のコード
 		$sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
 		//SQL文実行
@@ -50,7 +41,6 @@ require("dbconnect.php");
 		// 格納する変数の初期化
 		$posts = array();
 		// var_dump($stmt);
-
 		while(1){
 			//実行結果として得られたデータを表示
 			$rec = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -64,7 +54,6 @@ require("dbconnect.php");
 		// echo $rec['comment'];
 		// echo $rec['created'];
 		}
-
 	$dbh = null;
  ?>
 
@@ -72,7 +61,7 @@ require("dbconnect.php");
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>セブ掲示版</title>
+  <title>Music Lovers</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/bootstrap.css">
@@ -82,7 +71,8 @@ require("dbconnect.php");
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-
+<div>
+<link rel="stylesheet" href="main.css" type="text/css">
   <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
           <!-- Brand and toggle get grouped for better mobile display -->
@@ -93,7 +83,7 @@ require("dbconnect.php");
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="bbs.php"><span class="strong-title"><i class="fa fa-music" aria-hidden="true"></i> Oneline bbs</span></a>
+              <a class="navbar-brand" href="bbs.php"><span class="strong-title"><i class="fa fa-music" aria-hidden="true"></i> Music Lovers</span></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -123,12 +113,10 @@ require("dbconnect.php");
         <form action="bbs.php" method="post">
           <div class="form-group">
             <div class="input-group">
-              <input type="text" name="nickname" class="form-control"
-                       id="validate-text" placeholder="nickname" value="<?php echo $editname; ?>" required>
+              <input type="text" name="nickname" class="form-control" id="validate-text" placeholder="nickname" value="<?php echo $editname; ?>" required>
 
               <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
             </div>
-
           </div>
 
           <div class="form-group">
@@ -139,17 +127,16 @@ require("dbconnect.php");
           </div>
 
 			<?php if ($editname == ''){ ?>
-			<button type="submit" name="insert"  class="btn btn-primary col-xs-12" disabled>つぶやく</button>
+				<button type="submit" name="insert"  class="btn btn-primary col-xs-12" disabled>つぶやく</button>
 			<?php }else{ ?>
-			<input type="hidden" name="id" value="<?php echo $id;?>">
-			<button type="submit" name="update" class="btn btn-primary col-xs-12" disabled>変更する</button>
+				<input type="hidden" name="id" value="<?php echo $id;?>">
+				<button type="submit" name="update" class="btn btn-primary col-xs-12" disabled>変更する</button>
 			<?php } ?>
 
         </form>
       </div>
 
       <div class="col-md-8 content-margin-top">
-
         <div class="timeline-centered">
 
         <?php foreach ($posts as $post_each){ ?>
@@ -158,44 +145,31 @@ require("dbconnect.php");
             <a href="bbs.php?action=edit&id=<?php echo $post_each['id'];?>">
                 <div class="timeline-icon bg-success">
                     <i class="entypo-feather"></i>
-                    <i class="fa fa-gavel"></i>
+                    <i class="fa fa-star"></i>
                 </div>
             </a>
-                <div class="timeline-label">
+                <div class="timeline-label clear">
                     <h2>
-	                    <a href="#"><?php echo $post_each['nickname']; ?></a>
+	                    <a href="#" id="nonclear"><?php echo $post_each['nickname']; ?></a>
 	                    <span><?php echo $post_each['created']; ?></span>
                     </h2>
-                    <p><?php echo $post_each['comment']; ?></p>
-                    <a href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>"><i class="fa fa-trash fa-lg"></i></a>
+                    <p id="nonclear"><?php echo $post_each['comment']; ?></p>
+                    <a href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>"><i class="fa fa-ban fa-lg"></i></a>
                 </div>
             </div>
         </article>
         <?php } ?>
-        </div>
-      </div>
 
         <article class="timeline-entry begin">
-
             <div class="timeline-entry-inner">
-
-                <!-- <div class="timeline-icon" style="-webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);"> -->
+                <div class="timeline-icon" style="-webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);">
                     <i class="entypo-flight"></i> +
                 </div>
-
             </div>
-
         </article>
-
+       </div>
       </div>
-
     </div>
-  </div>
-
-
-
-
-
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -204,6 +178,3 @@ require("dbconnect.php");
   <script src="assets/js/form.js"></script>
 </body>
 </html>
-
-
-

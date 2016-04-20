@@ -182,8 +182,8 @@ img {
                     }
 
             .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon {
-                background: #fff;
-                color: #737881;
+                background: #DE148D;
+                /*color: #737881;*/
                 display: block;
                 width: 40px;
                 height: 40px;
@@ -213,7 +213,7 @@ img {
                 }
 
                 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-success {
-                    background-color: #00a651;
+                    background-color: #cc0066;
                     color: #fff;
                 }
 
