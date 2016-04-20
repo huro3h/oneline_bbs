@@ -34,6 +34,14 @@ require("dbconnect.php");
 			$id = $rec['id'];
 		}
 
+		if (isset($_GET['action']) && ($_GET['action'] == 'delete')){
+			$deletesql = "DELETE FROM `posts` WHERE `id`=".$_GET['id'];
+
+			//SQL文を実行
+			$stmt = $dbh->prepare($deletesql);
+			$stmt->execute();
+		}
+
 		// ここから掲示板に表示させる為のコード
 		$sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
 		//SQL文実行
@@ -159,6 +167,7 @@ require("dbconnect.php");
 	                    <span><?php echo $post_each['created']; ?></span>
                     </h2>
                     <p><?php echo $post_each['comment']; ?></p>
+                    <a href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>"><i class="fa fa-trash fa-lg"></i></a>
                 </div>
             </div>
         </article>
