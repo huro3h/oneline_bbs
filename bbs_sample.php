@@ -3,17 +3,19 @@
   //echo 'POST送信された！';
   //データベースに接続
   // ステップ1.db接続
-  $dsn = 'mysql:dbname=oneline_bbs;host=localhost';
+  // $dsn = 'mysql:dbname=oneline_bbs;host=localhost';
 
-  // 接続するためのユーザー情報
-  $user = 'root';
-  $password = '';
+  // // 接続するためのユーザー情報
+  // $user = 'root';
+  // $password = '';
 
-  // DB接続オブジェクトを作成
-  $dbh = new PDO($dsn,$user,$password);
+  // // DB接続オブジェクトを作成
+  // $dbh = new PDO($dsn,$user,$password);
 
-  // 接続したDBオブジェクトで文字コードutf8を使うように指定
-  $dbh->query('SET NAMES utf8');
+  // // 接続したDBオブジェクトで文字コードutf8を使うように指定
+  // $dbh->query('SET NAMES utf8');
+
+  require("dbconnect.php");
 
   //GET送信が行われたら、編集処理を実行
   // $action = $_GET['action'];
