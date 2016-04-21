@@ -1,5 +1,6 @@
 <?php
 require("dbconnect.php");
+
 	if(isset($_POST) && !empty($_POST)){
 		if (isset($_POST['update'])){
 			//Update文を実行
@@ -154,7 +155,8 @@ require("dbconnect.php");
 	                    <span><?php echo $post_each['created']; ?></span>
                     </h2>
                     <p id="nonclear"><?php echo $post_each['comment']; ?></p>
-                    <a href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>"><i class="fa fa-ban fa-lg"></i></a>
+                    <a href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" id="delete"><i class="fa fa-ban fa-lg"></i></a>
+
                 </div>
             </div>
         </article>
