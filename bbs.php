@@ -156,7 +156,15 @@ require("dbconnect.php");
                 <div class="timeline-label clear">
                     <h2>
 	                    <a href="#" id="nonclear"><?php echo $post_each['nickname']; ?></a>
-	                    <span><?php echo $post_each['created']; ?></span>
+                                <?php
+                                    // 一旦日時型に変換(String型からDatetime型へ変換する)
+                                    $created = strtotime($post_each['created']);
+                                    // 書式を変換(date関数使用)
+                                    $created = date('Y年m月d日 H時i分s秒',$created);
+                                 ?>
+                                 <!-- <span>< --><!-- ?php echo $post_each['created']; ? --><!-- ></span> -->
+                                 <span><?php echo $created; ?></span>
+
                     </h2>
                     <p id="nonclear"><?php echo $post_each['comment']; ?></p>
                     <a onclick="return confirm('削除するの？ *´-`)?')" href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" id="delete"><i class="fa fa-ban fa-lg"></i></a>
