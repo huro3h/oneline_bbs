@@ -1,8 +1,8 @@
 body {
-  margin-top: 20px;
-  background-size: cover;
-  background-image: url(../../back.jpg);
-  background-position: right 40pt;
+	margin-top: 20px;
+	background-size: cover;
+	background-image: url(../../back.jpg);
+	background-position: right 40pt;
 }
 
 .bg{
@@ -25,12 +25,12 @@ body {
 
 
 .content-margin-top {
-  margin-top: 80px;
+	margin-top: 80px;
 }
 
 .strong-title {
-  font-size: 30px;
-  font-weight: 800;
+	font-size: 30px;
+	font-weight: 800;
 }
 
 .clear{

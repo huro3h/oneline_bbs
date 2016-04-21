@@ -19,7 +19,7 @@ require("dbconnect.php");
 		$id = '';
 		if (isset($_GET['action']) && ($_GET['action'] == 'edit')){
 			//編集したいデータを取得するSQL文を作成（SELECT文）
-			$selectsql = 'SELECT * FROM `posts` WHERE `id`='.$_GET['id'];
+			$selectsql = sprintf('SELECT * FROM `posts` WHERE `id`=%s',$_GET['id']);
 			//SQL文を実行
 			$stmt = $dbh->prepare($selectsql);
 			$stmt->execute();
@@ -28,12 +28,16 @@ require("dbconnect.php");
 			$editcomment = $rec['comment'];
 			$id = $rec['id'];
 		}
+
+    // 削除するSQL文（削除ボタンが押された時の処理 GET送信で送られてきたパラメータを使う）
+    // $_GETが存在してて、なおかつactionの中にdeleteが入っていたら下のコードを実行
 		if (isset($_GET['action']) && ($_GET['action'] == 'delete')){
 			$deletesql = "DELETE FROM `posts` WHERE `id`=".$_GET['id'];
 			//SQL文を実行
 			$stmt = $dbh->prepare($deletesql);
 			$stmt->execute();
 		}
+
 		// ここから掲示板に表示させる為のコード
 		$sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
 		//SQL文実行
