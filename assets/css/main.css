@@ -43,3 +43,7 @@ body {
 #nonclear{
 	opacity: 1;
 }
+
+#font{
+	font-size: 21px;
+}

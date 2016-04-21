@@ -83,7 +83,7 @@ require("dbconnect.php");
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="bbs.php"><span class="strong-title"><i class="fa fa-music" aria-hidden="true"></i> Music Lovers</span></a>
+              <a class="navbar-brand" href="bbs.php"><span class="strong-title"><i class="fa fa-music" aria-hidden="true"></i> Music Lovers <i class="fa fa-heart-o" aria-hidden="true" id="font"></i></span></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
