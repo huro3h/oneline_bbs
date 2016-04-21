@@ -159,7 +159,7 @@ require("dbconnect.php");
 	                    <span><?php echo $post_each['created']; ?></span>
                     </h2>
                     <p id="nonclear"><?php echo $post_each['comment']; ?></p>
-                    <a href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" id="delete"><i class="fa fa-ban fa-lg"></i></a>
+                    <a onclick="return confirm('削除するの？ *´-`)?')" href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" id="delete"><i class="fa fa-ban fa-lg"></i></a>
 
                 </div>
             </div>
