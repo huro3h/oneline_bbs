@@ -32,14 +32,16 @@ require("dbconnect.php");
     // 削除するSQL文（削除ボタンが押された時の処理 GET送信で送られてきたパラメータを使う）
     // $_GETが存在してて、なおかつactionの中にdeleteが入っていたら下のコードを実行
 		if (isset($_GET['action']) && ($_GET['action'] == 'delete')){
-			$deletesql = "DELETE FROM `posts` WHERE `id`=".$_GET['id'];
+			// $deletesql = "DELETE FROM `posts` WHERE `id`=".$_GET['id'];
+      $deletesql = sprintf('UPDATE `posts` SET `delete_flag` = 1 WHERE `id`= %s',$_GET['id']);
+
 			//SQL文を実行
 			$stmt = $dbh->prepare($deletesql);
 			$stmt->execute();
 		}
 
 		// ここから掲示板に表示させる為のコード
-		$sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
+		$sql = 'SELECT * FROM `posts` WHERE `delete_flag`= 0 ORDER BY `created` DESC';
 		//SQL文実行
 		$stmt = $dbh->prepare($sql);
 		$stmt->execute();
@@ -169,6 +171,7 @@ require("dbconnect.php");
 
                     </h2>
                     <p id="nonclear"><?php echo $post_each['comment']; ?></p>
+                    <a ><i class="fa fa-thumbs-o-up" aria-hidden="true"><?php echo "1" ?></i></a>
                     <a onclick="return confirm('削除するの？ *´-`)?')" href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" class="delete"><i class="fa fa-ban fa-lg"></i></a>
 
                 </div>
