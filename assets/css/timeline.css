@@ -3,6 +3,12 @@ img {
     vertical-align: middle;
 }
 
+/*.delete{
+    position: absolute;
+    right:10px;
+    bottom:10px;
+}*/
+
 .img-responsive {
     display: block;
     height: auto;
@@ -286,10 +292,4 @@ img {
                         opacity: .6;
                         -ms-filter: alpha(opacity=60);
                         filter: alpha(opacity=60);
-                    }
-
-                    #delete{
-                        position: absolute;
-                        right:10px;
-                        bottom:10px;
                     }

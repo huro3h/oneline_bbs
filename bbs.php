@@ -74,6 +74,8 @@ require("dbconnect.php");
   <link rel="stylesheet" href="assets/css/form.css">
   <link rel="stylesheet" href="assets/css/timeline.css">
   <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/article.css">
+
 </head>
 <body>
 <div>
@@ -167,7 +169,7 @@ require("dbconnect.php");
 
                     </h2>
                     <p id="nonclear"><?php echo $post_each['comment']; ?></p>
-                    <a onclick="return confirm('削除するの？ *´-`)?')" href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" id="delete"><i class="fa fa-ban fa-lg"></i></a>
+                    <a onclick="return confirm('削除するの？ *´-`)?')" href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" class="delete"><i class="fa fa-ban fa-lg"></i></a>
 
                 </div>
             </div>
