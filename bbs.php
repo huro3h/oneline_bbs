@@ -12,6 +12,10 @@ require("dbconnect.php");
 			// INSERT文実行
 			$stmt = $dbh->prepare($sql);
 			$stmt->execute();
+
+      // 処理の再実行を防ぐ為に、自画面へリダイレクト
+      // header関数を使い、自分のページに飛ばし真っさらな状態に戻す
+      header('Location:bbs.php');
 	}
 		// GET送信されたら編集処理するコード
 		$editname='';
@@ -70,6 +74,10 @@ require("dbconnect.php");
       //UPDATE SQL文を実行
       $stmt = $dbh->prepare($likesql);
       $stmt->execute();
+      // 処理の再実行を防ぐ為に、自画面へリダイレクト
+      // header関数を使い、自分のページに飛ばし真っさらな状態に戻す
+      header('Location:bbs.php');
+
     }
 
 	$dbh = null;
