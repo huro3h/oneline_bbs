@@ -61,6 +61,17 @@ require("dbconnect.php");
 		// echo $rec['comment'];
 		// echo $rec['created'];
 		}
+
+    // いいねボタン(LIKES)実装
+    if (isset($_GET['action']) && ($_GET['action'] == 'like')){
+      // Update文でLIKEの数をカウントアップ(インクリメント)
+      $likesql = sprintf('UPDATE `posts` SET `likes` = `likes` + 1 WHERE `id`= %s',$_GET['id']);
+
+      //UPDATE SQL文を実行
+      $stmt = $dbh->prepare($likesql);
+      $stmt->execute();
+    }
+
 	$dbh = null;
  ?>
 
@@ -171,7 +182,7 @@ require("dbconnect.php");
 
                     </h2>
                     <p id="nonclear"><?php echo $post_each['comment']; ?></p>
-                    <a ><i class="fa fa-thumbs-o-up" aria-hidden="true"><?php echo "1" ?></i></a>
+                    <a href="bbs.php?action=like&id=<?php echo $post_each['id'];?>"><i class="fa fa-thumbs-o-up" aria-hidden="true"><?php echo $post_each['likes'];?></i></a>
                     <a onclick="return confirm('削除するの？ *´-`)?')" href="bbs.php?action=delete&id=<?php echo $post_each['id'];?>" class="delete"><i class="fa fa-ban fa-lg"></i></a>
 
                 </div>
