@@ -38,34 +38,75 @@ require("dbconnect.php");
     // $_GETが存在してて、なおかつactionの中にdeleteが入っていたら下のコードを実行
 		if (isset($_GET['action']) && ($_GET['action'] == 'delete')){
 			// $deletesql = "DELETE FROM `posts` WHERE `id`=".$_GET['id'];
-      $deletesql = sprintf('UPDATE `posts` SET `delete_flag` = 1 WHERE `id`= %s',$_GET['id']);
+      		$deletesql = sprintf('UPDATE `posts` SET `delete_flag` = 1 WHERE `id`= %s',$_GET['id']);
 
 			//SQL文を実行
 			$stmt = $dbh->prepare($deletesql);
 			$stmt->execute();
 		}
 
-		// ここから掲示板に表示させる為のコード
-		$sql = 'SELECT * FROM `posts` WHERE `delete_flag`= 0 ORDER BY `created` DESC';
-		//SQL文実行
-		$stmt = $dbh->prepare($sql);
-		$stmt->execute();
-		// 格納する変数の初期化
-		$posts = array();
-		// var_dump($stmt);
-		while(1){
-			//実行結果として得られたデータを表示
-			$rec = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($rec == false){
-		    	break;
+		// // ここから掲示板に表示させる為のコード
+		// $sql = 'SELECT * FROM `posts` WHERE `delete_flag`= 0 ORDER BY `created` DESC';
+		// //SQL文実行
+		// $stmt = $dbh->prepare($sql);
+		// $stmt->execute();
+		// // 格納する変数の初期化
+		// $posts = array();
+		// // var_dump($stmt);
+		// while(1){
+		// 	//実行結果として得られたデータを表示
+		// 	$rec = $stmt->fetch(PDO::FETCH_ASSOC);
+		// 	if($rec == false){
+		//     	break;
+		// 	}
+		// // 取得したデータを配列に格納しておく
+		// $posts[] = $rec;
+		// }
+
+		// ここから掲示板に表示させる為のコード（ページング追加Ver.）
+		$page = '';
+			if(isset($_REQUEST['page'])){
+			$page = $_REQUEST['page'];
 			}
-		// 取得したデータを配列に格納しておく
-		$posts[] = $rec;
-		// echo $rec['id'];
-		// echo $rec['nickname'];
-		// echo $rec['comment'];
-		// echo $rec['created'];
-		}
+		// 通常、index.phpが表示された時
+			if($page == ''){
+			$page = 1;
+			}
+
+			$page = max($page, 1);
+
+			$sql = sprintf('SELECT COUNT(*) AS cnt FROM `posts`');
+			$recordSet = mysqli_query($dbh, $sql) or die(mysqli_error($dbh));
+			$table = mysqli_fetch_assoc($recordSet);
+			$maxPage = ceil($table['cnt'] /5);
+			$page = min($page, $maxPage);
+
+			$start = ($page -1) * 5;
+			$start = max(0, $start);
+
+			$sql = sprintf('SELECT * FROM `posts` WHERE `delete_flag`= 0 ORDER BY `created` DESC LIMIT %d, 5',$start);
+			$sql = mysqli_query($dbh, $sql) or die(mysqli_error($dbh));
+			// ここまで
+
+    //SQL文実行
+    // $stmt = $dbh->prepare($sql);
+    // var_dump($stmt);
+    // $stmt->execute();
+    // 格納する変数の初期化
+    $posts = array();
+    // print_r($posts);
+    // while(1){
+      //実行結果として得られたデータを表示
+      $rec = $stmt->fetch(PDO::FETCH_ASSOC);
+      if($rec == false){
+          break;
+      }
+    // 取得したデータを配列に格納しておく
+    $posts[] = $rec;
+    // }
+
+
+
 
     // いいねボタン(LIKES)実装
     if (isset($_GET['action']) && ($_GET['action'] == 'like')){
@@ -195,6 +236,24 @@ require("dbconnect.php");
 
                 </div>
             </div>
+
+            <ul>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                 <!-- <li><a href="bbs.php" class="btn btn-default">前</a></li> -->
+                 <?php if($page > 1): ?>
+                   <li><a href="bbs.php?page=<?php echo($page-1); ?>" class="btn btn-default">前</a></li>
+                 <?php else: ?>
+                   <li>前</li>
+                 <?php endif; ?>
+                  &nbsp;&nbsp;|&nbsp;&nbsp;
+                 <!-- <li><a href="bbs.php" class="btn btn-default">次</a></li> -->
+                 <?php if($page < $maxPage): ?>
+                   <li><a href="bbs.php?page=<?php echo($page+1); ?>" class="btn btn-default">次</a></li>
+                 <?php else: ?>
+                   <li>次</li>
+                 <?php endif; ?>
+            </ul>
+
         </article>
         <?php } ?>
 
